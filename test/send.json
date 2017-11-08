@@ -1,0 +1,10 @@
+{
+  "name": "send_test",
+  "exchanges":{
+    "obnl.simulation.node": {
+      "binding":[
+        "obnl.simulation.node.connection_test"
+      ]
+    }
+  }
+}
