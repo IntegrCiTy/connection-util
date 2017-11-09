@@ -35,11 +35,14 @@ class Node(object):
         self._queues = {}
         self._exchanges = {}
 
+        self._host = host
+        self._vhost = vhost
+
         Node.LOGGER.debug("Connecting to AMQP server " + str(host) + '/' + str(vhost) + "...")
 
         credentials = pika.PlainCredentials(username, password)
         connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=host, virtual_host=vhost, credentials=credentials)
+            pika.ConnectionParameters(host=self._host, virtual_host=self._vhost, credentials=credentials)
         )
         self._channel = connection.channel()
 
@@ -112,6 +115,22 @@ class Node(object):
                 else:
                     Node.LOGGER.debug("Exchange '" + name + "' is created with no binding.")
         Node.LOGGER.debug("All Exchanges are created.")
+
+    @property
+    def host(self):
+        """
+
+        :return: the connected host.
+        """
+        return self._host
+
+    @property
+    def vhost(self):
+        """
+
+        :return: The RabbitMQ virtual host.
+        """
+        return self._vhost
 
     @property
     def name(self):
