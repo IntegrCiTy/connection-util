@@ -1,15 +1,15 @@
 {
   "name": "connection_test",
   "queues":{
-    "obnl.simulation.node": "on_simulation_message",
-    "obnl.local.node": "on_local_message",
+    "obnl.simulation.node.": "on_simulation_message",
+    "obnl.local.node.": "on_local_message",
     "obnl.data.node": "on_data_message"
   },
   "exchanges":{
     "obnl.simulation.node": {},
     "obnl.local.node": {
       "binding": [
-        "obnl.local.node.connection_test"
+        "obnl.local.node."
       ]
     }
   }

@@ -1,4 +1,5 @@
 from types import MethodType
+import uuid
 import logging
 import logging.handlers
 import json
@@ -50,7 +51,7 @@ class Node(object):
 
         json_data = self._load_config_file()
 
-        self._name = json_data["name"]
+        self._name = json_data["name"] if "name" in json_data else self.__class__.__name__ + '_' + str(uuid.uuid1())
 
         self._create_queues(json_data)
 
@@ -69,6 +70,8 @@ class Node(object):
             queues_data = dict_data["queues"]
 
             for name, func in queues_data.items():
+                if name.endswith('.'):
+                    name = name + self.name
                 if not hasattr(self, func):
                     info_func = str(self.__class__) + "." + func + "(self, ch, method, props, body)"
                     Node.LOGGER.warning("Abstract function '" + info_func + "' not implemented.")
@@ -90,11 +93,15 @@ class Node(object):
             exchanges_data = dict_data["exchanges"]
 
             for name, infos in exchanges_data.items():
+                if name.endswith('.'):
+                    name = name + self.name
                 exchange_id = name
                 self._exchanges = self._channel.exchange_declare(exchange=exchange_id)
                 if "binding" in infos:
                     for bind in infos["binding"]:
                         if type(bind) is str:
+                            if bind.endswith('.'):
+                                bind = bind + self.name
                             self._channel.queue_declare(bind)
                             self._channel.queue_bind(exchange=exchange_id,
                                                      queue=bind
@@ -102,6 +109,8 @@ class Node(object):
                             Node.LOGGER.debug("Exchange '" + name + "' is connected to the Queue '" + bind + "'.")
                         elif type(bind) is dict:
                             for queue, routing_key in bind:
+                                if routing_key.endswith('.'):
+                                    routing_key = routing_key + self.name
                                 self._channel.queue_declare(queue)
                                 self._channel.queue_bind(exchange=exchange_id,
                                                          queue=queue,
