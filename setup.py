@@ -1,16 +1,16 @@
 from setuptools import setup, find_packages
 import platform
 
-
 setup(name="connection-util",
       maintainer="The OBNL Team",
       maintainer_email="gillian.basso@hevs.ch",
       url="https://github.com/IntegrCiTy/connection-util",
-      version="0.2.0",
+      version="0.2.1",
       platforms=[platform.platform()],  # TODO indicate really tested platforms
 
-      packages=find_packages(),
+      packages=["ict.connection"],
       install_requires="pika",
+
 
       # metadata
 
