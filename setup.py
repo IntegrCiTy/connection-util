@@ -5,7 +5,7 @@ setup(name="connection-util",
       maintainer="The OBNL Team",
       maintainer_email="gillian.basso@hevs.ch",
       url="https://github.com/IntegrCiTy/connection-util",
-      version="0.2.1",
+      version="0.3.0",
       platforms=[platform.platform()],  # TODO indicate really tested platforms
 
       packages=["ict.connection"],
@@ -30,5 +30,6 @@ setup(name="connection-util",
                    "Operating System :: OS Independent",
                    "Programming Language :: Python :: 3.5",
                    "Topic :: Software Development :: Code Generators",
-                   "Topic :: Utilities"]
+                   "Topic :: Utilities"],
+      zip_safe=False
       )

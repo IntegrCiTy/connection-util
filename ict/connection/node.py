@@ -21,18 +21,18 @@ class Node(object):
     CONSOLE_HANDLER = logging.StreamHandler()
     FILE_HANDLERS = {}
 
-    def __init__(self, host, vhost,  username, password, config_file="connection.json"):
+    def __init__(self, host, vhost, username, password, config="connection.json"):
         """
 
         :param host: the host of AMQP server
         :param vhost: the virtual host name
         :param username: the username to connect to the server
         :param password: the associated password
-        :param config_file: the location of the file to load AMQP topology (queues, exchanges, bindings, etc.)
+        :param config: the location of the file to load AMQP topology (queues, exchanges, bindings, etc.)
         """
         super().__init__()
 
-        self._config_file = config_file
+        self._config = config
         self._queues = {}
         self._exchanges = {}
 
@@ -60,8 +60,18 @@ class Node(object):
         Node.LOGGER.info(self._name + " initialised.")
 
     def _load_config_file(self):
-        with open(self._config_file) as json_file:
-            return json.loads(json_file.read())
+        res = None
+        if type(self._config) is dict:
+            res = self._config
+        elif type(self._config is str):
+            try:
+                with open(self._config) as json_file:
+                    content = json_file.read()
+            except FileNotFoundError:
+                content = self._config
+            res = json.loads(content)
+
+        return res
 
     def _create_queues(self, dict_data):
         Node.LOGGER.debug("Creation of queues...")
@@ -75,6 +85,7 @@ class Node(object):
                 if not hasattr(self, func):
                     info_func = str(self.__class__) + "." + func + "(self, ch, method, props, body)"
                     Node.LOGGER.warning("Abstract function '" + info_func + "' not implemented.")
+
                     def callback_func(the_self, ch, method, props, body):
                         raise NotImplementedError("Abstract function call from " + info_func + " must be implemented.")
                     setattr(self, func, MethodType(callback_func, self))
@@ -153,8 +164,8 @@ class Node(object):
         """
         Starts listening.
         """
-        self._channel.start_consuming()
         Node.LOGGER.debug("Start consuming.")
+        self._channel.start_consuming()
 
     def send(self, exchange, routing, message, reply_to=None):
         """

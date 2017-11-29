@@ -24,3 +24,6 @@ if __name__ == "__main__":
     TestNode.activate_console_logging(logging.DEBUG)
     n = TestNode("localhost", "backend_vhost",  "tool", "tool")
     n.start()
+
+    while True:
+        pass
