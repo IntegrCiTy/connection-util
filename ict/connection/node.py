@@ -82,6 +82,11 @@ class Node(object):
             for name, func in queues_data.items():
                 if name.endswith('.'):
                     name = name + self.name
+
+                if type(func) is dict:
+                    onlyone = func["get"]
+                    func = func["callback"]
+
                 if not hasattr(self, func):
                     info_func = str(self.__class__) + "." + func + "(self, ch, method, props, body)"
                     Node.LOGGER.warning("Abstract function '" + info_func + "' not implemented.")
@@ -175,7 +180,7 @@ class Node(object):
         :param message: the message content
         :param reply_to: the routing key to reply to
         """
-        Node.LOGGER.debug("Send message: " + str(type(message)) + " from '" + str(exchange) + "' to '" + str(routing) + "'.")
+        Node.LOGGER.debug("Send message: " + repr(message) + " from '" + str(exchange) + "' to '" + str(routing) + "'.")
         self._channel.publish(exchange=exchange,
                               routing_key=routing,
                               properties=pika.BasicProperties(reply_to=reply_to),
