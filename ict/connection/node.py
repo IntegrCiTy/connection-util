@@ -56,7 +56,7 @@ class Node(object):
         logger.info(self._name + " initialised.")
 
     def _load_config_file(self):
-        res = None
+        res = {}
         if type(self._config) is dict:
             res = self._config
         elif type(self._config is str):
@@ -181,36 +181,3 @@ class Node(object):
                               routing_key=routing,
                               properties=pika.BasicProperties(reply_to=reply_to),
                               body=message)
-
-    @staticmethod
-    def activate_console_logging(log_level=logging.INFO):
-        if Node.CONSOLE_HANDLER not in Node.LOGGER.handlers:
-            Node._add_handler(Node.CONSOLE_HANDLER, log_level)
-
-    @staticmethod
-    def deactivate_console_logging():
-        if Node.CONSOLE_HANDLER in Node.LOGGER.handlers:
-            Node._remove_handler(Node.CONSOLE_HANDLER)
-
-    @staticmethod
-    def activate_file_logging(filename, log_level=logging.INFO):
-        if filename not in Node.FILE_HANDLERS:
-            handler = logging.handlers.TimedRotatingFileHandler(filename)
-            Node.FILE_HANDLERS[filename] = handler
-            Node._add_handler(handler, log_level)
-
-    @staticmethod
-    def deactivate_file_logging(filename):
-        if filename in Node.FILE_HANDLERS:
-            Node._remove_handler(Node.FILE_HANDLERS.pop(filename))
-
-    @staticmethod
-    def _add_handler(handler, log_level):
-        handler.setLevel(log_level)
-        handler.setFormatter(logging.Formatter(Node.DEFAULT_LOGGING_FORMAT))
-        Node.LOGGER.setLevel(1)  # TODO log all data
-        Node.LOGGER.addHandler(handler)
-
-    @staticmethod
-    def _remove_handler(handler):
-        Node.LOGGER.removeHandler(handler)
