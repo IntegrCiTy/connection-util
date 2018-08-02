@@ -5,10 +5,13 @@ import logging
 
 from logging.handlers import RotatingFileHandler
 
-logger = logging.getLogger()
+logger = logging.getLogger("UTIL-connect")
 logger.setLevel(logging.DEBUG)
 
-file_formatter = logging.Formatter("%(asctime)s :: %(levelname)s :: %(pathname)s :: %(funcName)s :: %(message)s")
+file_formatter = logging.Formatter(
+    "%(asctime)s :: %(levelname)s :: %(name)s -> %(filename)s :: %(funcName)s :: %(message)s"
+)
+
 
 file_handler = RotatingFileHandler("activity.log", "w")
 
