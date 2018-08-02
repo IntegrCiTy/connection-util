@@ -3,7 +3,7 @@
 
 import logging
 
-from logging.handlers import RotatingFileHandler
+from logging import FileHandler
 
 logger = logging.getLogger("UTIL-connect")
 logger.setLevel(logging.DEBUG)
@@ -13,7 +13,7 @@ file_formatter = logging.Formatter(
 )
 
 
-file_handler = RotatingFileHandler("activity.log", "w")
+file_handler = FileHandler("activity.log", "a")
 
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(file_formatter)
