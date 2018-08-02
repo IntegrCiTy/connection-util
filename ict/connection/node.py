@@ -176,7 +176,8 @@ class Node(object):
         :param message: the message content
         :param reply_to: the routing key to reply to
         """
-        logger.debug("Send message: " + repr(message) + " from '" + str(exchange) + "' to '" + str(routing) + "'.")
+        # logger.debug("Send message: " + repr(message) + " from '" + str(exchange) + "' to '" + str(routing) + "'.")
+        logger.debug("Send message from " + str(exchange) + " to " + str(routing) + ".")
         self._channel.publish(exchange=exchange,
                               routing_key=routing,
                               properties=pika.BasicProperties(reply_to=reply_to),
